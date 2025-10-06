@@ -42,7 +42,7 @@ async function addRecurring(ctx, match) {
     return ctx.reply("Tanggal harus antara 1 dan 31.");
   }
   if (isNaN(amount)) {
-    return ctx.reply("Jumlah yang Anda masukkan tidak valid.");
+    return ctx.reply("Jumlah yang kamu masukkan tidak valid.");
   }
 
   try {
@@ -72,7 +72,7 @@ async function listRecurring(ctx) {
       "Kamu belum memiliki aturan transaksi berulang yang aktif."
     );
   }
-  let message = "*Daftar Transaksi Anda Perbulan:*\n\n";
+  let message = "*Daftar Transaksi kamu Perbulan:*\n\n";
   transactions.forEach((t) => {
     const sign = t.type === "income" ? "+" : "-";
     message += `ID: \`${t.id}\` | Setiap tgl *${t.dayOfMonth}*\n`;

@@ -70,7 +70,7 @@ async function exportToCsv(ctx) {
 
 async function exportToPdf(ctx) {
   await ctx.reply(
-    "Sedang membuat file PDF, ini mungkin butuh waktu lebih lama..."
+    "Sedang membuat file PDF..."
   );
   try {
     const transactions = await getAllTransactions(ctx.from.id);

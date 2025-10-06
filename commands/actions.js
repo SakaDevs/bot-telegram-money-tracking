@@ -29,7 +29,7 @@ const sendPaginatedReport = async (ctx, type, category, page) => {
     if (count === 0) {
       const catText = category ? ` dengan kategori "${category}"` : "";
       return await ctx.reply(
-        `Anda belum memiliki data ${title.toLowerCase()}${catText}.`,
+        `kamu belum memiliki data ${title.toLowerCase()}${catText}.`,
         Markup.inlineKeyboard([
           [{ text: "⬅️ Kembali", callback_data: "show_report_from_text" }],
         ])
@@ -88,7 +88,7 @@ const sendPaginatedReport = async (ctx, type, category, page) => {
 export const showReportAction = async (ctx) => {
   await ctx.answerCbQuery();
   await ctx.editMessageCaption(
-    "Pilih jenis laporan yang ingin Anda lihat (semua kategori):",
+    "Pilih jenis laporan yang ingin kamu lihat (semua kategori):",
     Markup.inlineKeyboard([
       [
         { text: "Pengeluaran 📉", callback_data: "paginate_expense_all_1" },
@@ -108,7 +108,7 @@ export const showReportFromTextAction = async (ctx) => {
   await ctx.answerCbQuery();
   await ctx.deleteMessage();
   await ctx.reply(
-    "Pilih jenis laporan yang ingin Anda lihat (semua kategori):",
+    "Pilih jenis laporan yang ingin kamu lihat (semua kategori):",
     Markup.inlineKeyboard([
       [
         { text: "Pengeluaran 📉", callback_data: "paginate_expense_all_1" },
@@ -255,7 +255,7 @@ export const confirmDeleteAllAction = async (ctx) => {
     await Income.destroy({ where: { userId: ctx.from.id } });
     await Expense.destroy({ where: { userId: ctx.from.id } });
     await ctx.editMessageText(
-      "✅ Semua data transaksi Anda telah berhasil dihapus secara permanen."
+      "✅ Semua data transaksi kamu telah berhasil dihapus secara permanen."
     );
   } catch (error) {
     await ctx.editMessageText(
@@ -272,5 +272,5 @@ export const editAction = async (ctx) => {
 };
 
 export const editCancelInitialAction = async (ctx) => {
-  await ctx.editMessageText("Aksi edit dibatalkan.");
+  await ctx.editMessageText("Edit dibatalkan.");
 };

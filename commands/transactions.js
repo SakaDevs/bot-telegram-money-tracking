@@ -44,7 +44,7 @@ const transactionHandler = async (ctx) => {
       if (bestMatch.rating > 0.6) {
         return ctx.reply(
           `❌ Kategori '${match[2]}' tidak ditemukan.\n\n` +
-            `Mungkin maksud Anda '${bestMatch.target}'? Coba ulangi perintah dengan kategori yang benar.`
+            `Mungkin maksud kamu '${bestMatch.target}'? Coba ulangi perintah dengan kategori yang benar.`
         );
       } else {
         return ctx.reply(

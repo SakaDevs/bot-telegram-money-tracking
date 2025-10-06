@@ -26,14 +26,14 @@ async function askDeleteConfirmation(ctx, period) {
   let callbackData = "";
 
   if (period === "today") {
-    warningText = "Anda yakin ingin menghapus semua transaksi hari ini?";
+    warningText = "Kamu yakin ingin menghapus semua transaksi hari ini?";
     callbackData = "confirm_delete_today";
   } else if (period === "yesterday") {
-    warningText = "Anda yakin ingin menghapus semua transaksi kemarin?";
+    warningText = "Kamu yakin ingin menghapus semua transaksi kemarin?";
     callbackData = "confirm_delete_yesterday";
   } else if (period === "all") {
     warningText =
-      "🚨 *PERINGATAN KERAS* 🚨\n\nAnda yakin ingin menghapus **SEMUA** data transaksi Anda? Aksi ini **TIDAK BISA DIBATALKAN**.";
+      "🚨 *WARNING* 🚨\n\Kamu yakin ingin menghapus **SEMUA** data transaksi kamu? Aksi ini **TIDAK BISA DIBATALKAN**.";
     callbackData = "confirm_delete_all";
   }
 

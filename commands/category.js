@@ -35,7 +35,7 @@ async function showAllCategories(ctx) {
 
     if (allCatNames.size === 0) {
       return ctx.reply(
-        "Anda belum memiliki transaksi dengan kategori apa pun."
+        "kamu belum memiliki transaksi dengan kategori apa pun."
       );
     }
 
@@ -45,7 +45,7 @@ async function showAllCategories(ctx) {
     ]);
 
     await ctx.reply(
-      "Pilih kategori yang ingin Anda lihat:",
+      "Pilih kategori yang ingin kamu lihat:",
       Markup.inlineKeyboard(buttons)
     );
   } catch (error) {

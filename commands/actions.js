@@ -4,6 +4,7 @@ import Income from "../models/Income.js";
 import Expense from "../models/Expense.js";
 import menuCommand from "./menu.js";
 import categoryCommand from "./category.js";
+import { formatDate } from "../utils/formatter.js";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -38,7 +39,7 @@ const sendPaginatedReport = async (ctx, type, category, page) => {
     const catText = category ? ` (Kategori: *${category}*)` : "";
     let message = `*Laporan Semua ${title}*${catText}\n(Halaman ${pageNumber}/${totalPages})\n\n`;
     rows.forEach((item) => {
-      const timestamp = item.createdAt.toLocaleString("id-ID");
+      const timestamp = formatDate(item.createdAt);
       const sign = type === "income" ? "+" : "-";
       const descriptionText = item.description
         ? `\n    └ _${item.description}_`

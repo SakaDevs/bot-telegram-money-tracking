@@ -2,6 +2,7 @@ import { Op } from "sequelize";
 import Income from "../models/Income.js";
 import Expense from "../models/Expense.js";
 import Budget from "../models/Budget.js";
+import { formatDate } from "../utils/formatter.js";
 
 const todayCommand = async (ctx) => {
   try {
@@ -49,7 +50,7 @@ const todayCommand = async (ctx) => {
     if (incomes.length > 0) {
       message += "*Pemasukan:*\n";
       incomes.forEach((income) => {
-        const timestamp = income.createdAt.toLocaleString("id-ID");
+        const timestamp = formatDate(income.createdAt);
         const descriptionText = income.description
           ? `\n    └ _${income.description}_`
           : "";
@@ -66,7 +67,7 @@ const todayCommand = async (ctx) => {
     if (expenses.length > 0) {
       message += "*Pengeluaran:*\n";
       expenses.forEach((expense) => {
-        const timestamp = expense.createdAt.toLocaleString("id-ID");
+        const timestamp = formatDate(expense.createdAt)
         const descriptionText = expense.description
           ? `\n    └ _${expense.description}_`
           : "";

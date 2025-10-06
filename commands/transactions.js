@@ -1,6 +1,7 @@
 import Income from "../models/Income.js";
 import Expense from "../models/Expense.js";
 import stringSimilarity from "string-similarity";
+import { formatDate } from "../utils/formatter.js";
 const validIncomeCategories = ["gaji", "bonus", "hadiah", "lainnya"];
 const validExpenseCategories = [
   "makan",
@@ -56,7 +57,7 @@ const transactionHandler = async (ctx) => {
 
     try {
       const now = new Date();
-      const timestamp = now.toLocaleString("id-ID");
+      const timestamp = now.toLocaleString("id-ID", {timeZone: 'Asia/Jakarta'});
 
       if (sign === "-") {
         await Expense.create({

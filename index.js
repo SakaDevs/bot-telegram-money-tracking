@@ -16,6 +16,7 @@ import yearCommand from "./commands/yearSummary.js";
 import recurringCommand from "./commands/recurring.js";
 import goalCommand from "./commands/goal.js"
 import reportCommand from "./commands/report.js"
+import exportCommand from "./commands/export.js";
 
 // Impor semua action handler
 import {
@@ -63,6 +64,7 @@ SakaBot.command("recurring", recurringCommand);
 SakaBot.command("category", categoryCommand);
 SakaBot.command("goal", goalCommand);
 SakaBot.command("report", reportCommand);
+SakaBot.command("export", exportCommand)
 
 // Pendaftaran Aksi Tombol (Actions)
 SakaBot.action("show_report", showReportAction);

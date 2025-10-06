@@ -1,8 +1,14 @@
-// commands/delete.js
 import { Markup } from "telegraf";
 import { Op } from "sequelize";
 import Income from "../models/Income.js";
 import Expense from "../models/Expense.js";
+
+function getJakartaTime() {
+  const now = new Date();
+  const WIB_OFFSET = 7 * 60;
+  const serverOffset = now.getTimezoneOffset();
+  return new Date(now.getTime() + (WIB_OFFSET + serverOffset) * 60 * 1000);
+}
 
 const deleteCommand = async (ctx) => {
   const parts = ctx.message.text.split(" ");
@@ -26,14 +32,14 @@ async function askDeleteConfirmation(ctx, period) {
   let callbackData = "";
 
   if (period === "today") {
-    warningText = "Kamu yakin ingin menghapus semua transaksi hari ini?";
+    warningText = "Anda yakin ingin menghapus semua transaksi hari ini?";
     callbackData = "confirm_delete_today";
   } else if (period === "yesterday") {
-    warningText = "Kamu yakin ingin menghapus semua transaksi kemarin?";
+    warningText = "Anda yakin ingin menghapus semua transaksi kemarin?";
     callbackData = "confirm_delete_yesterday";
   } else if (period === "all") {
     warningText =
-      "🚨 *WARNING* 🚨\n\Kamu yakin ingin menghapus **SEMUA** data transaksi kamu? Aksi ini **TIDAK BISA DIBATALKAN**.";
+      "🚨 *PERINGATAN KERAS* 🚨\n\nAnda yakin ingin menghapus **SEMUA** data transaksi Anda? Aksi ini **TIDAK BISA DIBATALKAN**.";
     callbackData = "confirm_delete_all";
   }
 

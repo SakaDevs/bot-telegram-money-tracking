@@ -14,9 +14,10 @@ import budgetCommand from "./commands/budget.js";
 import summaryCommand from "./commands/summaryMonth.js";
 import yearCommand from "./commands/yearSummary.js";
 import recurringCommand from "./commands/recurring.js";
-import goalCommand from "./commands/goal.js"
-import reportCommand from "./commands/report.js"
+import goalCommand from "./commands/goal.js";
+import reportCommand from "./commands/report.js";
 import exportCommand from "./commands/export.js";
+import yesterdayCommand from "./commands/yesterday.js";
 
 // Impor semua action handler
 import {
@@ -38,6 +39,7 @@ import {
 import transactionHandler from "./commands/transactions.js";
 // Impor scene untuk proses edit
 import editScene from "./scenes/editScenes.js";
+import { message } from "telegraf/filters";
 
 const SakaBot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
 
@@ -49,6 +51,19 @@ SakaBot.use(stage.middleware());
 // Pendaftaran Perintah (Commands)
 SakaBot.start((ctx) => {
   ctx.reply("Halo selamat datang! Silakan gunakan /menu untuk memulai.");
+});
+
+SakaBot.on(message('text'), async (ctx, next) => {
+  if (ctx.message.text.startsWith("/")) {
+    return next();
+  }
+  const isHandled = await transactionHandler(ctx);
+  if (!isHandled) {
+    await ctx.reply(
+      'Maaf, saya tidak mengerti maksud kamu nih. 😔\n\n' +
+      'Ketik /help untuk melihat semua command yang ada.'
+    );
+  }
 });
 
 SakaBot.help(helpCommand);
@@ -64,7 +79,8 @@ SakaBot.command("recurring", recurringCommand);
 SakaBot.command("category", categoryCommand);
 SakaBot.command("goal", goalCommand);
 SakaBot.command("report", reportCommand);
-SakaBot.command("export", exportCommand)
+SakaBot.command("export", exportCommand);
+SakaBot.command("yesterday", yesterdayCommand);
 
 // Pendaftaran Aksi Tombol (Actions)
 SakaBot.action("show_report", showReportAction);
@@ -89,7 +105,6 @@ SakaBot.action(/^edit_(\w+)_(\d+)$/, editAction);
 SakaBot.action("edit_cancel_initial", editCancelInitialAction);
 
 // Pendaftaran Handler Pesan Umum
-SakaBot.on("message", transactionHandler);
 
 // Fungsi untuk Menjalankan Bot
 async function startBot() {
@@ -102,5 +117,7 @@ async function startBot() {
     console.error("Gagal memulai bot:", error);
   }
 }
+
+
 
 startBot();

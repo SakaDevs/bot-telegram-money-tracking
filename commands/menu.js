@@ -27,7 +27,7 @@ const menuCommand = async (ctx) => {
 
   // Kirim pesan kedua (atau pertama) untuk menampilkan Reply Keyboard
   await ctx.reply(
-    'Pilih perintah cepat:',
+    'Shortcut menu: ',
     Markup.keyboard([
         ['/today', '/month'], // Baris pertama
         ['/edit', '/delete'], // Baris kedua

@@ -1,62 +1,48 @@
 import { Op } from "sequelize";
 import Income from "../models/Income.js";
 import Expense from "../models/Expense.js";
-import Budget from "../models/Budget.js";
 import { formatDate } from "../utils/formatter.js";
 
-const todayCommand = async (ctx) => {
+const yesterdayCommand = async (ctx) => {
   try {
-    // --- LOGIKA BARU UNTUK MENENTUKAN TANGGAL ---
-    const WIB_OFFSET = 7 * 60; // WIB adalah UTC+7 dalam menit
     const now = new Date();
-    const serverOffset = now.getTimezoneOffset(); // Offset server (biasanya 0 untuk UTC)
-
-    // Hitung waktu saat ini di Jakarta
+    const WIB_OFFSET = 7 * 60;
+    const serverOffset = now.getTimezoneOffset();
     const nowInJakarta = new Date(
       now.getTime() + (WIB_OFFSET + serverOffset) * 60 * 1000
     );
 
-    // Dapatkan awal dan akhir hari berdasarkan tanggal di Jakarta
-    const startOfTodayInJakarta = new Date(nowInJakarta);
-    startOfTodayInJakarta.setHours(0, 0, 0, 0);
+    const yesterdayInJakarta = new Date(nowInJakarta);
+    yesterdayInJakarta.setDate(yesterdayInJakarta.getDate() - 1);
 
-    const endOfTodayInJakarta = new Date(nowInJakarta);
-    endOfTodayInJakarta.setHours(23, 59, 59, 999);
-    // ---------------------------------------------
+    const startOfYesterday = new Date(yesterdayInJakarta);
+    startOfYesterday.setHours(0, 0, 0, 0);
 
-    const [budget, incomes, expenses] = await Promise.all([
-      Budget.findOne({
-        where: {
-          userId: ctx.from.id,
-          month: nowInJakarta.getMonth() + 1,
-          year: nowInJakarta.getFullYear(),
-        },
-      }),
+    const endOfYesterday = new Date(yesterdayInJakarta);
+    endOfYesterday.setHours(23, 59, 59, 999);
+
+    const [incomes, expenses] = await Promise.all([
       Income.findAll({
         where: {
           userId: ctx.from.id,
-          createdAt: {
-            [Op.between]: [startOfTodayInJakarta, endOfTodayInJakarta],
-          },
+          createdAt: { [Op.between]: [startOfYesterday, endOfYesterday] },
         },
         order: [["createdAt", "ASC"]],
       }),
       Expense.findAll({
         where: {
           userId: ctx.from.id,
-          createdAt: {
-            [Op.between]: [startOfTodayInJakarta, endOfTodayInJakarta],
-          },
+          createdAt: { [Op.between]: [startOfYesterday, endOfYesterday] },
         },
         order: [["createdAt", "ASC"]],
       }),
     ]);
 
     if (incomes.length === 0 && expenses.length === 0) {
-      return ctx.reply("Belum ada transaksi yang tercatat hari ini.");
+      return ctx.reply("Tidak ada transaksi yang tercatat kemarin.");
     }
 
-    let message = `*Laporan Transaksi Hari Ini*\n_(${nowInJakarta.toLocaleDateString(
+    let message = `*Laporan Transaksi Kemarin*\n_(${yesterdayInJakarta.toLocaleDateString(
       "id-ID",
       { dateStyle: "full", timeZone: "Asia/Jakarta" }
     )})_\n\n`;
@@ -97,43 +83,17 @@ const todayCommand = async (ctx) => {
       )}*\n\n`;
     }
 
-    if (budget && budget.amount > 0) {
-      const totalExpenseMonth = await Expense.sum("amount", {
-        where: {
-          userId: ctx.from.id,
-          createdAt: {
-            [Op.gte]: new Date(
-              nowInJakarta.getFullYear(),
-              nowInJakarta.getMonth(),
-              1
-            ),
-            [Op.lt]: new Date(
-              nowInJakarta.getFullYear(),
-              nowInJakarta.getMonth() + 1,
-              1
-            ),
-          },
-        },
-      });
-
-      const percentage = ((totalExpenseMonth / budget.amount) * 100).toFixed(1);
-      message += `*Progres Budget Bulan Ini:*\n`;
-      message += `Rp${(totalExpenseMonth || 0).toLocaleString(
-        "id-ID"
-      )} / Rp${budget.amount.toLocaleString("id-ID")} (${percentage}%)\n\n`;
-    }
-
     const netChange = totalIncome - totalExpense;
     const sign = netChange >= 0 ? "+" : "-";
-    message += `*Perubahan Uang Hari Ini: ${sign}Rp${Math.abs(
+    message += `*Perubahan Uang Kemarin: ${sign}Rp${Math.abs(
       netChange
     ).toLocaleString("id-ID")}*`;
 
     ctx.replyWithMarkdown(message);
   } catch (error) {
-    console.error("Gagal mengambil laporan harian:", error);
+    console.error("Gagal mengambil laporan kemarin:", error);
     ctx.reply("Maaf, terjadi kesalahan saat mengambil laporan.");
   }
 };
 
-export default todayCommand;
+export default yesterdayCommand;

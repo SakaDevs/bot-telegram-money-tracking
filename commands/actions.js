@@ -6,6 +6,13 @@ import menuCommand from "./menu.js";
 import categoryCommand from "./category.js";
 import { formatDate } from "../utils/formatter.js";
 
+function getJakartaTime() {
+  const now = new Date();
+  const WIB_OFFSET = 7 * 60;
+  const serverOffset = now.getTimezoneOffset();
+  return new Date(now.getTime() + (WIB_OFFSET + serverOffset) * 60 * 1000);
+}
+
 const ITEMS_PER_PAGE = 5;
 
 const sendPaginatedReport = async (ctx, type, category, page) => {
@@ -193,9 +200,10 @@ export const deleteCancelAction = async (ctx) => {
 };
 
 export const confirmDeleteTodayAction = async (ctx) => {
-  const startOfDay = new Date();
+  const nowInJakarta = getJakartaTime();
+  const startOfDay = new Date(nowInJakarta);
   startOfDay.setHours(0, 0, 0, 0);
-  const endOfDay = new Date();
+  const endOfDay = new Date(nowInJakarta);
   endOfDay.setHours(23, 59, 59, 999);
   try {
     const deletedIncomes = await Income.destroy({
@@ -221,11 +229,12 @@ export const confirmDeleteTodayAction = async (ctx) => {
 };
 
 export const confirmDeleteYesterdayAction = async (ctx) => {
-  const yesterdayStart = new Date();
-  yesterdayStart.setDate(yesterdayStart.getDate() - 1);
+  const yesterdayInJakarta = getJakartaTime();
+  yesterdayInJakarta.setDate(yesterdayInJakarta.getDate() - 1);
+
+  const yesterdayStart = new Date(yesterdayInJakarta);
   yesterdayStart.setHours(0, 0, 0, 0);
-  const yesterdayEnd = new Date();
-  yesterdayEnd.setDate(yesterdayEnd.getDate() - 1);
+  const yesterdayEnd = new Date(yesterdayInJakarta);
   yesterdayEnd.setHours(23, 59, 59, 999);
   try {
     const deletedIncomes = await Income.destroy({

@@ -26,6 +26,7 @@ Dapatkan wawasan mendalam tentang keuanganmu:
 • \`/month\` - Laporan detail untuk bulan ini (default), atau gunakan \`/month [bln] [thn]\`.
 • \`/year\` - Laporan ringkasan per bulan untuk tahun ini (default), atau gunakan \`/year [thn]\`.
 • \`/summary\` - Grafik Pie Chart pengeluaran bulan ini beserta analisis budget.
+• \`/summary [bln] [thn] \` - Grafik Pie Chart pengeluaran budget.
 • \`/category\` - Menampilkan menu interaktif semua kategorimu, atau gunakan \`/category [nama]\` untuk laporan spesifik.
 • \`/report [tgl_mulai] [tgl_akhir]\` - Laporan untuk rentang tanggal kustom (format: DD/MM/YYYY).
 
